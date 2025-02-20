@@ -1,5 +1,5 @@
 GotoUI1740063269 = {};
-GotoUI1740063269["1"] = Instance.new("ScreenGui", script.Parent);
+GotoUI1740063269["1"] = Instance.new("ScreenGui", game:GetService("CoreGui").RobloxGui);
 GotoUI1740063269["1"]["Name"] = [[GotoUI]];
 GotoUI1740063269["1"]["IgnoreGuiInset"] = true
 GotoUI1740063269["1"]["DisplayOrder"] = 2147483647
