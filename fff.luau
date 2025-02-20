@@ -1,6 +1,8 @@
 GotoUI1740063269 = {};
-GotoUI1740063269["1"] = Instance.new("ScreenGui", game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui"));
+GotoUI1740063269["1"] = Instance.new("ScreenGui", game:GetService("CoreGui").RobloxGui);
 GotoUI1740063269["1"]["Name"] = [[GotoUI]];
+GotoUI1740063269["1"]["IgnoreGuiInset"] = true
+GotoUI1740063269["1"]["DisplayOrder"] = 2147483647
 GotoUI1740063269["1"]["ZIndexBehavior"] = Enum.ZIndexBehavior.Sibling;
 GotoUI1740063269["2"] = Instance.new("Frame", GotoUI1740063269["1"]);
 GotoUI1740063269["2"]["BorderSizePixel"] = 0;
