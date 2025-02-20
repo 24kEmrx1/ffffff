@@ -1,5 +1,5 @@
 GotoUI1740063269 = {};
-GotoUI1740063269["1"] = Instance.new("ScreenGui", game:GetService("CoreGui").RobloxGui);
+GotoUI1740063269["1"] = Instance.new("ScreenGui", script.Parent);
 GotoUI1740063269["1"]["Name"] = [[GotoUI]];
 GotoUI1740063269["1"]["IgnoreGuiInset"] = true
 GotoUI1740063269["1"]["DisplayOrder"] = 2147483647
@@ -163,7 +163,7 @@ GotoUI1740063269["14"]["AspectRatio"] = 2.5;
 GotoUI1740063269["15"] = Instance.new("LocalScript", GotoUI1740063269["1"]);
 GotoUI1740063269["15"]["Name"] = [[Code]];
 
-local FindPlayer = function(input)
+FindPlayer = function(input)
 	for _, V1 in pairs(game:GetService("Players"):GetPlayers()) do
 		if input:lower() == V1.Name:lower():sub(1, #input) then
 			return V1;
@@ -171,7 +171,7 @@ local FindPlayer = function(input)
 	end
 end
 
-local Code = function()
+Code = function()
 	local script = GotoUI1740063269["15"];
 	local Main = (script.Parent.GotoFrame)
 	local Speed = 0.1
@@ -181,9 +181,25 @@ local Code = function()
 
 
 	Main.Button.MouseButton1Click:Connect(function()
-		local Target = FindPlayer(Main.NameBox.Text)
-		if Target ~= nil and Target:IsA("Player") then
-			LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(Target.Character.PrimaryPart.Position + (Target.Character.PrimaryPart.CFrame.LookVector * 4), Target.Character.PrimaryPart.Position))
+		local players = game:GetService("Players")
+		local localPlayer = players.LocalPlayer
+		local targetPlayer = nil
+
+		if Main.NameBox.Text:lower() == "random" then
+			local playerList = players:GetPlayers()
+			if #playerList > 1 then
+				targetPlayer = playerList[math.random(1, #playerList)]
+				
+				if targetPlayer == LocalPlayer then
+					targetPlayer = playerList[math.random(1, #playerList)]
+				end
+			end
+		else
+			targetPlayer = FindPlayer(Main.NameBox.Text)
+		end
+
+		if targetPlayer and targetPlayer:IsA("Player") and targetPlayer.Character and targetPlayer.Character.PrimaryPart then
+			localPlayer.Character:SetPrimaryPartCFrame(CFrame.new(targetPlayer.Character.PrimaryPart.Position + (targetPlayer.Character.PrimaryPart.CFrame.LookVector*4),targetPlayer.Character.PrimaryPart.Position))
 		end
 	end)
 
@@ -266,7 +282,7 @@ local Code = function()
 		end
 	end)
 end;
-local Dragify = function()
+Dragify = function()
 	local script = GotoUI1740063269["15"];
 	local UIS = game:GetService("UserInputService")
 	local Frame = script.Parent.GotoFrame
@@ -308,10 +324,20 @@ task.spawn(Dragify);
 
 game.Players.LocalPlayer.Chatted:Connect(function(Message)
 	local args = Message:split(" ")
-	if args[1]:lower() == ":goto" then
-		local Target = FindPlayer(args[2])
-		if Target ~= nil and Target:IsA("Player") then
-			game.Players.LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(Target.Character.PrimaryPart.Position + (Target.Character.PrimaryPart.CFrame.LookVector * 4), Target.Character.PrimaryPart.Position))
+	local Target = nil
+
+	if args[2]:lower() == "random" then
+		local players = game:GetService("Players"):GetPlayers()
+		if #players > 1 then
+			repeat
+				Target = players[math.random(1, #players)]
+			until Target ~= game.Players.LocalPlayer
 		end
+	else
+		Target = FindPlayer(args[2])
+	end
+
+	if Target ~= nil and Target:IsA("Player") and Target.Character and Target.Character.PrimaryPart then
+		game.Players.LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(Target.Character.PrimaryPart.Position + (Target.Character.PrimaryPart.CFrame.LookVector*4),Target.Character.PrimaryPart.Position))
 	end
 end)
