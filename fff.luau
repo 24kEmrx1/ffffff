@@ -1,5 +1,5 @@
 GotoUI1740063269 = {};
-GotoUI1740063269["1"] = Instance.new("ScreenGui", game:GetService("CoreGui").RobloxGui);
+GotoUI1740063269["1"] = Instance.new("ScreenGui", script.Parent);
 GotoUI1740063269["1"]["Name"] = [[GotoUI]];
 GotoUI1740063269["1"]["IgnoreGuiInset"] = true
 GotoUI1740063269["1"]["DisplayOrder"] = 2147483647
@@ -162,6 +162,15 @@ GotoUI1740063269["14"] = Instance.new("UIAspectRatioConstraint", GotoUI174006326
 GotoUI1740063269["14"]["AspectRatio"] = 2.5;
 GotoUI1740063269["15"] = Instance.new("LocalScript", GotoUI1740063269["1"]);
 GotoUI1740063269["15"]["Name"] = [[Code]];
+
+local FindPlayer = function(input)
+	for _, V1 in pairs(game:GetService("Players"):GetPlayers()) do
+		if input:lower() == V1.Name:lower():sub(1, #input) then
+			return V1;
+		end
+	end
+end
+
 local Code = function()
 	local script = GotoUI1740063269["15"];
 	local Main = (script.Parent.GotoFrame)
@@ -170,13 +179,6 @@ local Code = function()
 	local LocalPlayer = game:GetService("Players").LocalPlayer
 	local UserInputService = game:GetService("UserInputService")
 
-	local FindPlayer = function(input)
-		for _, V1 in pairs(game:GetService("Players"):GetPlayers()) do
-			if input:lower() == V1.Name:lower():sub(1, #input) then
-				return V1;
-			end
-		end
-	end
 
 	Main.Button.MouseButton1Click:Connect(function()
 		local Target = FindPlayer(Main.NameBox.Text)
@@ -303,4 +305,13 @@ local Dragify = function()
 end
 task.spawn(Code);
 task.spawn(Dragify);
-return GotoUI1740063269["1"];
+
+game.Players.LocalPlayer.Chatted:Connect(function(Message)
+	local args = Message:split(" ")
+	if args[1]:lower() == ":goto" then
+		local Target = FindPlayer(args[2])
+		if Target ~= nil and Target:IsA("Player") then
+			game.Players.LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(Target.Character.PrimaryPart.Position + (Target.Character.PrimaryPart.CFrame.LookVector * 4), Target.Character.PrimaryPart.Position))
+		end
+	end
+end)
